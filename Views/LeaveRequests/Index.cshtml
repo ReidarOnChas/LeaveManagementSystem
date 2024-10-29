@@ -1,0 +1,49 @@
+﻿@model IEnumerable<LeaveManagementSystem.LeaveRequest>
+
+@{
+    ViewData["Title"] = "Ledighetsansökningar";
+}
+
+<h2>Ledighetsansökningar</h2>
+
+<!-- Form för att söka efter anställda -->
+<form asp-action="Index" method="get" class="form-inline mb-3">
+    <input type="text" name="searchString" value="@ViewData["CurrentFilter"]" class="form-control mr-2" placeholder="Sök efter anställdas namn" />
+    <button type="submit" class="btn btn-primary">Sök</button>
+</form>
+
+@if (ViewData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @ViewData["ErrorMessage"]
+    </div>
+}
+else
+{
+    <!-- Lista med anställda och deras ansökningar -->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Anställd</th>
+                <th>Startdatum</th>
+                <th>Slutdatum</th>
+                <th>Antal dagar</th>
+                <th>Ledighetstyp</th>
+                <th>Ansökningsdatum</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var request in Model)
+            {
+                <tr>
+                    <td>@request.Employee.Name</td>
+                    <td>@request.StartDate.ToShortDateString()</td>
+                    <td>@request.EndDate.ToShortDateString()</td>
+                    <td>@(request.EndDate - request.StartDate).Days + 1</td>
+                    <td>@request.LeaveType.LeaveName</td>
+                    <td>@request.ApplicationDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
